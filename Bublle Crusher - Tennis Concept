@@ -1,0 +1,464 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+
+class BublleCrasher
+{
+    static int playerRocketSize = 5;
+    static int wallPosition = 0;
+    static int wallSize = Console.WindowWidth - 16;
+    static int enemyRocketSizeFirst = 10;
+    static int enemyRocketSizeSecond = 10;
+    static int ShootPositionX = 0;
+    static int ShootPositionY = 0;
+    // ball direction left and up
+    static bool ShootDirectionLeft = true;
+    // ball direction left and up
+    static bool ShootDirectionUp = true;  
+    static int playerPosition = 0;
+    static int firstEnemyPosition = 0;
+    static int secondEnemyPosition = 0;
+    static int bonusObjectPositionX = 0;
+    static int bonusObjectPositionY = 0;
+    static int playerResult = 3;
+    static int playerScore = 0;
+    static Random randomGenerator = new Random(); 
+    static int BonusObjectSize = 11;
+
+
+
+    static void RemoveScrollBars()   
+    {
+
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.BufferHeight = Console.WindowHeight = 51;
+        Console.BufferWidth = Console.WindowWidth = 61;
+        for (int j = 1; j < Console.WindowHeight; j++)
+        {
+            PrintAtPosition(44, j,  '|', ConsoleColor.DarkGreen);
+        }
+
+    }
+
+    static void DrawPlayer()
+    {
+        for (int x = playerPosition; x < playerPosition + playerRocketSize; x++)
+        {
+
+            PrintAtPosition(x, 50, '-', ConsoleColor.DarkGreen);
+            PrintAtPosition(x, 49, '-', ConsoleColor.DarkGreen);
+        }
+    }
+    static void DrawFirstAIEnemy()
+    {
+        for (int x = firstEnemyPosition; x < firstEnemyPosition + enemyRocketSizeFirst; x++)
+        {
+
+            PrintAtPosition(x, 25, '-', ConsoleColor.Red);
+            PrintAtPosition(x, 26, '-', ConsoleColor.Red);
+        } 
+    }
+    static void DrawSecondAIEnemy()
+    {
+        for (int x = secondEnemyPosition; x < secondEnemyPosition + enemyRocketSizeSecond; x++)
+        {
+
+            PrintAtPosition(x, 15, '-', ConsoleColor.Red);
+            PrintAtPosition(x, 16, '-', ConsoleColor.Red);
+        } 
+    }
+
+    static void PrintAtPosition(int x, int y, char symbol, ConsoleColor color)
+    {
+        Console.SetCursorPosition(x, y);
+        Console.ForegroundColor = color;
+        Console.Write(symbol);
+        Console.SetCursorPosition(x, y);
+        Console.Write(symbol);
+    }
+
+    static void PrintStringAtPosition(int x, int y, string text, ConsoleColor color)
+    {
+        Console.SetCursorPosition(x, y);
+        Console.ForegroundColor = color;
+        Console.Write(text);
+
+
+    }
+    static void SetInitialsPosition()
+    {
+        Console.Title = "Simple Tenis Game";
+        Console.ResetColor();
+        Console.Clear();
+        playerPosition = (Console.WindowWidth - 10) / 2 - playerRocketSize / 2;
+        SetAtTheMidlleShootPosition();
+    }
+
+    static void SetAtTheMidlleShootPosition()
+    {
+        ShootPositionX = Console.WindowWidth - 36;
+        ShootPositionY = Console.WindowHeight - 3;
+        bonusObjectPositionX = Console.WindowWidth - 36;
+        bonusObjectPositionY = Console.WindowHeight - 48;
+    }
+
+    static void DrawShoot()
+    {
+        PrintAtPosition(ShootPositionX, ShootPositionY, '@', ConsoleColor.Yellow);
+    }
+    static void DrawBonusObject()
+    {
+        for (int x = bonusObjectPositionX; x < bonusObjectPositionX + BonusObjectSize; x++)
+        {
+            PrintAtPosition(x, Console.WindowHeight - 48, '0', ConsoleColor.White);
+        }       
+    }
+    static void PrintResult()
+    {
+        Console.ResetColor();
+        Console.SetCursorPosition(47, Console.WindowWidth - 59);
+        Console.WriteLine(" Lives: {0}", playerResult);
+    }
+    static void PrintScore()
+    {
+        Console.ResetColor();
+        Console.SetCursorPosition(47, Console.WindowWidth - 55);
+        Console.WriteLine(" Score: {0}", playerScore);
+
+    }
+    static void MovePlayerRight()
+    {
+        if (playerPosition < (Console.WindowWidth - 16) - playerRocketSize)
+        {
+            playerPosition++;
+        }
+        Thread.Sleep(10/2);
+        //TODO: move player right
+    }
+
+    static void MovePlayerLeft()
+    {
+        if (playerPosition > 0)
+        {
+            playerPosition--;
+        }
+        Thread.Sleep(10/2);
+        //TODO: move player left
+    }
+
+    static void MoveFirstAIEnemyRight()
+    {
+        if (firstEnemyPosition < (Console.WindowWidth - 16) - enemyRocketSizeFirst)
+        {
+            firstEnemyPosition++;
+        }
+        Thread.Sleep(10 / 2);
+        //TODO: move player right
+    }
+
+    static void MoveFirstAIEnemyLeft()
+    {
+        if (firstEnemyPosition > 0)
+        {
+            firstEnemyPosition--;
+        }
+        Thread.Sleep(10 / 2);
+        //TODO: move player left
+    }
+    static void MoveSecondAIEnemyRight()
+    {
+        if (secondEnemyPosition < (Console.WindowWidth - 16) - enemyRocketSizeSecond)
+        {
+            secondEnemyPosition++;
+        }
+        Thread.Sleep(10 / 2);
+        //TODO: move player right
+    }
+
+    static void MoveSecondAIEnemyLeft()
+    {
+        if (secondEnemyPosition > 0)
+        {
+            secondEnemyPosition--;
+        }
+        Thread.Sleep(10 / 2);
+        //TODO: move player left
+    }
+    static void FirstEnemyAIMove()
+    {
+        int randomNumber = randomGenerator.Next(0, 2);
+        //if (randomNumber == 0)
+        //{
+        //    MoveSecondAIPlayerLeft();
+        //}
+        //if ( randomNumber == 1 )
+        //{
+        //    MoveSecondAIPlayerRight();
+        //}
+        if (randomNumber == 0)
+        {
+
+            if (ShootDirectionLeft == true)
+            {
+                MoveFirstAIEnemyLeft();
+            }
+            else
+            {
+                MoveFirstAIEnemyRight();
+            }
+        }
+    }
+    static void SecondEnemyAIMove()
+    {
+        int randomNumber = randomGenerator.Next(0, 2);
+        //if (randomNumber == 0)
+        //{
+        //    MoveThirdAIPlayerLeft();
+        //}
+        //if (randomNumber == 1)
+        //{
+        //    MoveThirdAIPlayerRight();
+        //}
+        if (randomNumber == 0)
+        {
+
+            if (ShootDirectionLeft == true)
+            {
+                MoveSecondAIEnemyLeft();
+            }
+            else
+            {
+                MoveSecondAIEnemyRight();
+            }
+        }
+    }
+    static void MoveBonusObject()
+    {
+        int randomNumber = randomGenerator.Next(0, 2);
+        
+        if (randomNumber == 0)
+        {
+
+            if (ShootDirectionLeft == true)
+            {
+                MoveBonusObjectLeft();
+            }
+            else
+            {
+                MoveBonusObjectRight();
+            }
+        } 
+    }
+
+    static void MoveBonusObjectRight()
+    {
+        if (bonusObjectPositionX < (Console.WindowWidth - 16) - 1)
+        {
+            bonusObjectPositionX++;
+        }
+        Thread.Sleep(10 / 2);  
+    }
+
+    static void MoveBonusObjectLeft()
+    {
+        if (bonusObjectPositionX > 0)
+        {
+            bonusObjectPositionX--;
+        }
+        Thread.Sleep(10 / 2);  
+    }
+
+    static void WallPosition()
+    {
+
+        for (int y = wallPosition; y < wallSize; y++)
+        {
+            PrintAtPosition(y, 1, '-', ConsoleColor.DarkGreen);
+        }
+        //Console.WriteLine();
+        //Console.ResetColor();
+        //int[,] matrixNM =
+        //        {
+        //                {0, 4, 4, 0, 3, 0, 0, 3, 4, 4, 3,},
+        //                {0, 1, 3, 3, 2, 1, 4, 3, 3, 3, 3,},
+        //                {1, 3, 0, 2, 4, 2, 3, 3, 3, 1, 1,},
+        //                {2, 0, 1, 0, 1, 1, 2, 2, 2, 1, 4,},
+        //                {3, 4, 3, 4, 3, 4, 2, 0, 0, 1, 1,},
+        //        };
+
+        ////fills the matrix and prints the matrix
+        //for (int rows = 0; rows < matrixNM.GetLength(0); rows++)
+        //{
+        //    for (int cols = 0; cols < matrixNM.GetLength(1); cols++)
+        //    {
+        //        if (cols == matrixNM.GetLength(1) - 1) //if we have reached the end of the row, to go to the next line
+        //        {
+        //            Console.WriteLine("{0,3} ", matrixNM[rows, cols]);
+        //        }
+        //        else
+        //        {
+        //            Console.Write("{0,3} ", matrixNM[rows, cols]);
+        //        }
+        //    }
+        //}
+    }
+
+    static void MoveShoot()
+    {
+        if (ShootPositionX == 0)
+        {            
+            ShootDirectionUp = false;
+        }
+        if (ShootPositionX == Console.WindowWidth - 17)
+        {
+            ShootDirectionUp = true;
+        }
+        if (ShootPositionY == Console.WindowHeight)
+        {
+            SetAtTheMidlleShootPosition();
+            ShootDirectionLeft = true;
+            ShootDirectionUp = false;
+            //playerResult = playerResult++;
+            //Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
+            //Console.WriteLine(" U WIN ");
+            Console.ReadKey();
+            //TODO: return the ball down
+        }
+        if (ShootPositionY == Console.WindowHeight - 1)
+        {
+            SetAtTheMidlleShootPosition();
+            ShootDirectionLeft = true;
+            ShootDirectionUp = true;
+            Console.Beep();
+            playerResult--;
+            Console.SetCursorPosition((Console.WindowWidth - 10) / 2, Console.WindowHeight / 2);
+            Console.WriteLine(" TRY AGAIN ");
+            if (playerResult < 0)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - 10) / 2, Console.WindowHeight  / 2);
+                Console.WriteLine(" GAME OVER ");
+                Console.ReadLine();
+                
+                SetInitialsPosition();
+            }
+            RemoveScrollBars();
+            Console.ReadKey();
+            //TODO: player loose
+        }
+
+        if (ShootPositionY > 48 )
+        {
+            if (ShootPositionX >= playerPosition && ShootPositionX < playerPosition + playerRocketSize)
+            {
+                //ballDirectionUp = true;
+                ShootDirectionLeft = true;
+            }
+        }
+        if (ShootPositionY <= Console.WindowWidth - 34 - 1)
+        {
+            if (ShootPositionX >= firstEnemyPosition && ShootPositionX < firstEnemyPosition + enemyRocketSizeFirst)
+            {
+                ShootDirectionLeft = false;
+            }
+        }
+        if (ShootPositionY <= Console.WindowWidth - 44 - 1)
+        {
+            if (ShootPositionX >= secondEnemyPosition && ShootPositionX < secondEnemyPosition + enemyRocketSizeSecond)
+            {
+                ShootDirectionLeft = false;
+            }
+        }
+        if (ShootPositionY < Console.WindowWidth - 48)
+        {
+            if (ShootPositionX > bonusObjectPositionX && ShootPositionX < bonusObjectPositionX + BonusObjectSize)
+            {
+                playerScore++;
+                Console.Beep();
+            }
+        }
+        if (playerScore == 50)
+        {
+            playerResult++;
+        }
+        if (ShootDirectionLeft)
+        {
+            ShootPositionY--;
+        }
+        else
+        {
+            ShootPositionY++;
+        }
+        if (ShootDirectionUp)
+        {
+            ShootPositionX--;
+        }
+        else
+        {
+            ShootPositionX++;
+        }
+
+        if (ShootPositionY == wallPosition +1)
+        {
+            //ballDirectionUp = false;
+            ShootDirectionLeft = false;
+        }
+       
+        // TODO: implement
+    }
+    static void Main()
+    {
+        RemoveScrollBars();
+        SetInitialsPosition();
+        DateTime start = DateTime.Now;
+        PrintStringAtPosition(20, 11, " MoWglY TEAM ", ConsoleColor.Yellow);
+        PrintStringAtPosition(18, 15, "... Presents ...", ConsoleColor.Yellow);
+        Console.ReadKey();
+        Console.ResetColor();
+        Console.Clear();
+        Console.WriteLine(start);
+        PrintStringAtPosition(19, 11, " Simple Tenis Game  ", ConsoleColor.DarkGreen);
+        //PrintStringAtPosition(21, 15, "... GAME ...", ConsoleColor.DarkGreen);
+        Console.ReadKey();
+        Console.ResetColor();
+        Console.Clear();
+        Console.WriteLine(start);
+        PrintStringAtPosition(11, 17, " ", ConsoleColor.White);
+
+        while (true)
+        {
+            if (Console.KeyAvailable)// move player
+            {
+                ConsoleKeyInfo KeyInfo = Console.ReadKey(true);
+                while (Console.KeyAvailable) Console.ReadKey(true);
+                {
+                    if (KeyInfo.Key == ConsoleKey.RightArrow)
+                    {
+                        MovePlayerRight();
+                    }
+                    if (KeyInfo.Key == ConsoleKey.LeftArrow)
+                    {
+                        MovePlayerLeft();
+                    }
+                }
+            }
+            MoveBonusObject();
+            FirstEnemyAIMove();
+            SecondEnemyAIMove();
+            MoveShoot();// move a shoot
+            Console.Clear();
+            RemoveScrollBars();
+            WallPosition();// wall Position
+           // MoveWall();
+            DrawBonusObject();
+            DrawPlayer();
+            DrawFirstAIEnemy();
+            DrawSecondAIEnemy();
+            DrawShoot();
+            PrintResult();
+            PrintScore();// score
+            Thread.Sleep(30);
+        } 
+    }
+}
